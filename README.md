@@ -1,4 +1,4 @@
-# Seminario-Modelizacion-de-nicho
+# Seminario Modelizacion de nicho
 
 Curso organizado por proyecto Bioclim (CREAF).
 
@@ -26,6 +26,8 @@ https://github.com/mangeles582/Seminario-Modelizacion-de-nicho/blob/master/progr
 
 ## Material necesario
 
+Ordenador portatil con:
+
 Última versión de R (v. 3.3.2) https://ftp.cixug.es/CRAN/
 
 Última versión de Rstudio (v 1.0.136) https://www.rstudio.com/products/rstudio/download/
@@ -34,7 +36,7 @@ Instalar paquetes: dismo, raster, sp, HH, rgeos, tree, randomForest, plotmo, mgc
 
 MaxEnt.jar (v. 3.3.3k) https://www.cs.princeton.edu/~schapire/maxent/
 
-Tener actualizada la última versión de java
+Última versión de java actualizada
 
 ## Contacto
 
