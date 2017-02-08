@@ -30,6 +30,8 @@ https://github.com/mangeles582/Seminario-Modelizacion-de-nicho/blob/master/progr
 
 Última versión de Rstudio (v 1.0.136) https://www.rstudio.com/products/rstudio/download/
 
+Instalar paquetes: dismo, raster, sp, HH, rgeos, tree, randomForest, plotmo, mgcv, rgdal, rJava y gbm.
+
 MaxEnt.jar (v. 3.3.3k) https://www.cs.princeton.edu/~schapire/maxent/
 
 Tener actualizada la última versión de java
