@@ -40,7 +40,7 @@ MaxEnt.jar (v. 3.3.3k) https://www.cs.princeton.edu/~schapire/maxent/
 
 ## Contacto
 
-María Ángeles Pérez (ma.perez@creaf.uab.cat)
+María Ángeles Pérez (ma.perez@creaf.uab.cat  m.angeles582@gmail.com)
 
 ## Información adicional
 
