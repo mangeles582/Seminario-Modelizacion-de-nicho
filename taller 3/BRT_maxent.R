@@ -31,7 +31,7 @@ variables<-brick(stack(vars_def))
 names(variables) <- c("bio3", "bio4", "bio8", "bio9", "bio12", "bio15")
 plot(variables[["bio3"]])
 
-## VARIABLES PERIODO DE ANOMALÍA (AÑO HIDROLOGICO 2013-2014)
+## VARIABLES PERIODO DE ANOMALÃA (AÃ‘O HIDROLOGICO 2013-2014)
 
 dir.sequia <- "C:/Taller 2/murcia anomalia/"
 lista.variables <- list.files(path=dir.sequia, full.names=TRUE)# igual me sobra
@@ -42,7 +42,7 @@ plot(variables_sequia[["bio3"]])
 
 
   especie <- read.table(paste0("C:/Taller 3/data/Rosmarinus officinalis_pseudo_training.csv"), sep=";", dec=".", header = T)
-  especie <- especie[!is.na(especie$bio8), ]# no se en que momento se produjo el fallo pero en todas las tablas hay 18 filas con valor na para bio8. Este es el camino más rápido para solucionarlo
+  especie <- especie[!is.na(especie$bio8), ]# no se en que momento se produjo el fallo pero en todas las tablas hay 18 filas con valor na para bio8. Este es el camino mÃ¡s rÃ¡pido para solucionarlo
 
   tc <- if (nrow(especie)<500) 3 else 5
   especie.tc5.lr005 <- gbm.step(data=especie, gbm.x=5:10, gbm.y=4, family="bernoulli",
@@ -53,7 +53,7 @@ plot(variables_sequia[["bio3"]])
   dev.off() 
   
   png(paste0("C:/Taller 3/Rosmarinus_response curves.png"), width=3000, height=2000, pointsize=50)
-  plotmo( especie.tc5.lr005)#visreg no se por qué no funciona
+  plotmo( especie.tc5.lr005)#visreg no se por quÃ© no funciona
   dev.off()
   
   #PREDICCION GEOGRAFICA REFERENCE PERIOD
@@ -67,13 +67,13 @@ plot(variables_sequia[["bio3"]])
   brt.sequia<-predict(variables_sequia,especie.tc5.lr005, n.trees=n.arboles, type="response")
   plot(brt.sequia, main=paste0("BRT.pseudoabsence"), cex.main=0.8)
 
-  # GUARDAMOS EL RASTER DE IDONEIDAD PARA LA ESPECIE antes y despues de la sequía
+  # GUARDAMOS EL RASTER DE IDONEIDAD PARA LA ESPECIE antes y despues de la sequÃ­a
   
   writeRaster(brt.ref, filename= paste0("C:/Taller 3/Rosmarinus_brt_ref.tif"), format="GTiff", overwrite=TRUE)
   writeRaster(brt.sequia, filename= paste0("C:/Taller 3/Rosmarinus_brt_sequia.tif"), format="GTiff", overwrite=TRUE)
   
   
-  #EVALUAMOS EL MODELO (cronologicamente deberia hacerse después de calibrar el modelo con datos del periodo de referencia, pero así ahorro espacio)
+  #EVALUAMOS EL MODELO (cronologicamente deberia hacerse despuÃ©s de calibrar el modelo con datos del periodo de referencia, pero asÃ­ ahorro espacio)
   
   especie_test <- read.csv(paste0("C:/Taller 3/data/Rosmarinus officinalis_pseudo_test.csv"), header=TRUE, sep=";", de=".")
   
@@ -92,6 +92,10 @@ plot(variables_sequia[["bio3"]])
   
 gc()
 
+mess.anomalia<-mess(x=variables_sequia, v=especie[, names(variables)], full=TRUE)
+#no vienen los nombres en el grÃƒÂ¡fico, pero son estos
+names(mess.anomalia)<-c(names(variables), "mess")
+plot(mess.anomalia)# es practicamente idÃ©ntico al de MaxEnt, y comparando el mapa de mess con el de bio 15, vemos que son iguales, ergo, la que mÃ¡s extrapola es bio15 (estacionalidad de la precip), que sin embargo, por ser una variable importante no podemos quitar
 
 
 
@@ -104,7 +108,7 @@ variables<-brick(stack(vars_def))
 names(variables) <- c("bio3", "bio4", "bio8", "bio9", "bio12", "bio15")
 plot(variables[["bio3"]])
 
-## VARIABLES PERIODO DE ANOMALÍA (AÑO HIDROLOGICO 2013-2014)
+## VARIABLES PERIODO DE ANOMALÃA (AÃ‘O HIDROLOGICO 2013-2014)
 
 dir.sequia <- "C:/Taller 2/murcia anomalia/"
 lista.variables <- list.files(path=dir.sequia, full.names=TRUE)# igual me sobra
@@ -121,7 +125,7 @@ dir.create(paste0("C:/TAller 3/MAXENT_R/")) #to create all directories for save 
 
 
   especie <- read.table(paste0("C:/Taller 3/data/Rosmarinus officinalis_pseudo_training.csv"), sep=";", dec=".", header = T)
-  especie <- especie[!is.na(especie$bio8), ]# no se en que momento se produjo el fallo pero en todas las tablas hay 18 filas con valor na para bio8. Este es el camino más rápido para solucionarlo
+  especie <- especie[!is.na(especie$bio8), ]# no se en que momento se produjo el fallo pero en todas las tablas hay 18 filas con valor na para bio8. Este es el camino mÃ¡s rÃ¡pido para solucionarlo
   
   especie <- data.frame(cbind(especie$x, especie$y))
   colnames(especie) <- c("lon","lat")
@@ -143,14 +147,14 @@ dir.create(paste0("C:/TAller 3/MAXENT_R/")) #to create all directories for save 
   me <- maxent(variables, p=especie, a=bg, args=c("betamultiplier=3", "outputgrids=FALSE","threshold=FALSE", "replicates=10", "replicatetype=crossvalidate","jackknife=FALSE", "responsecurves=FALSE"))
   
   # PLOT CURVAS DE RESPUESTA EN LA MISMA IMAGEN
-  # curvas de respuesta con interacción
+  # curvas de respuesta con interacciÃ³n
   
   response_bio3 <- read.table(paste0("F:/TESIS/CAP TFM/modelos/MAXENT/", sp[i], "/plots/species_bio3.dat"), sep=",", dec=".", header=T)
   response_bio4 <- read.table(paste0("F:/TESIS/CAP TFM/modelos/MAXENT/", sp[i], "/plots/species_bio4.dat"), sep=",", dec=".", header=T)
 
   par(mfrow=c(1,1))
   
-  ### curvas de respuesta variables sin interacción
+  ### curvas de respuesta variables sin interacciÃ³n
   
   response_bio3 <- read.table(paste0("F:/TESIS/CAP TFM/modelos/MAXENT/", sp[i], "/plots/species_bio3_only.dat"), sep=",", dec=".", header=T)
   response_bio4 <- read.table(paste0("F:/TESIS/CAP TFM/modelos/MAXENT/", sp[i], "/plots/species_bio4_only.dat"), sep=",", dec=".", header=T)
@@ -180,12 +184,12 @@ dir.create(paste0("C:/TAller 3/MAXENT_R/")) #to create all directories for save 
   
   # OBTENEMOS IDONEIDAD ZONAS DE MUESTREO
 
-  # GUARDAMOS EL RASTER DE IDONEIDAD PARA LA ESPECIE antes y despues de la sequía
+  # GUARDAMOS EL RASTER DE IDONEIDAD PARA LA ESPECIE antes y despues de la sequÃ­a
   
   writeRaster(maxent.ref.avg, filename= paste0("F:/TESIS/CAP TFM/modelos/MAXENT/raster idoneidad/",sp[i], "_ref.tif"), format="GTiff", overwrite=TRUE)
   writeRaster(maxent.sequia.avg, filename= paste0("F:/TESIS/CAP TFM/modelos/MAXENT/raster idoneidad/",sp[i], "_sequia.tif"), format="GTiff", overwrite=TRUE)
   
-  #EVALUAMOS EL MODELO (cronologicamente deberia hacerse después de calibrar el modelo con datos del periodo de referencia, pero así ahorro espacio)
+  #EVALUAMOS EL MODELO (cronologicamente deberia hacerse despuÃ©s de calibrar el modelo con datos del periodo de referencia, pero asÃ­ ahorro espacio)
   
   especie_test <- read.csv(paste0("F:/TESIS/CAP TFM/occurence data/europe/test data/presence-background/", sp[i], "_pback_test.csv"), header=TRUE, sep=";", de=".")
   especie_test <- especie_test[!is.na(especie_test$bio8), ]
