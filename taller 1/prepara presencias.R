@@ -12,7 +12,7 @@ source("funcionesSDM_taller1.R")
 
 library(raster) #TRABAJO CON DATOS RASTER
 library(HH) #VARIANCE INFLATION FACTOR
-library(rgeos) #OPERACIONES GEOMÉTRICAS CON INFO GEOGRÁFICA
+library(rgeos) #OPERACIONES GEOMÃ‰TRICAS CON INFO GEOGRÃFICA
 library(dismo) #LIBRERIA PARA MODELOS DE DISTRIBUCION
 library(rgdal)
 library(sp)
@@ -25,19 +25,19 @@ ReduceSpatialClustering = function(data, minimum.distance){
   row<-1
   
   
-  #repite la operación hasta que se cumple la condición de salida
+  #repite la operaciÃ³n hasta que se cumple la condiciÃ³n de salida
   repeat{
     
     #contenido de la fila (para no tirar de toda la tabla en todas las operaciones)
     f<-data[row, ]
     
-    #genera los l�???mites de la cuadr�???cula de búsqueda
+    #genera los lÃ???mites de la cuadrÃ???cula de bÃºsqueda
     ymax<-f$latitude + minimum.distance
     ymin<-f$latitude - minimum.distance
     xmax<-f$longitude + minimum.distance
     xmin<-f$longitude - minimum.distance
     
-    #selecciona de la tabla los datos con coordenadas dentro del rectángulo que no tienen las mismas coordenadas que la fila con la que estamos trabajando, y las elimina de la tabla
+    #selecciona de la tabla los datos con coordenadas dentro del rectÃ¡ngulo que no tienen las mismas coordenadas que la fila con la que estamos trabajando, y las elimina de la tabla
     data<-data[!((data$latitude <= ymax) & (data$latitude >= ymin) & (data$longitude <= xmax) & (data$longitude >= xmin) & (data$latitude != f$latitude | data$longitude != f$longitude)), ]
     
     #estima de filas por procesar
@@ -46,7 +46,7 @@ ReduceSpatialClustering = function(data, minimum.distance){
     #suma 1 al contador de la fila
     row<-row+1
     
-    #condición de salida cuando llega a la última fila
+    #condiciÃ³n de salida cuando llega a la Ãºltima fila
     if(row>=nrow(data))break
   }
   
@@ -134,12 +134,12 @@ is.data.frame(Acyt.onvariables)
 #no es un data.frame, lo convertimos
 Acyt.onvariables<-data.frame(Acyt.onvariables)
 is.data.frame(Acyt.onvariables)
-#comprobamos como quedó
+#comprobamos como quedÃ³
 str(Acyt.onvariables)
 
 #lo unimos a las presencias
 Acyt<-data.frame(Acyt, Acyt.onvariables)
-nrow(Acyt) ## para ver el n�mero de filas=n�mero de presencias
+nrow(Acyt) ## para ver el número de filas=número de presencias
 rm(Acyt.onvariables)
 
 # comprobamos si los datos de presencia poseen valores na para alguna de las variables (en cuyo caso la coordenada cae dentro de una zona sin datos, probablemente el mar)
@@ -164,10 +164,10 @@ Acyt$scientificName.1 <- NULL
 unique(Acyt$scientificName)
 
 unique(Acyt$datasetID) # hay varios nombres pero solo un codigo de especie. Todo guay
-# si hubiese m�s c�digo seleccionamos el adecuado
+# si hubiese más código seleccionamos el adecuado
 #presencia<-presencia[presencia$species_id==codigoxxxxx, ]
 
-# ponemos un �nico nombre a la columna de scientificName
+# ponemos un único nombre a la columna de scientificName
 Acyt$scientificName<-"Anthyllis cytisoides"
 
 
@@ -179,13 +179,13 @@ Acyt$scientificName<-"Anthyllis cytisoides"
 str(Acyt$coordinatePrecision)
 str(Acyt$coordinateUncertaintyInMeters)
 
-#ojo, son caracteres, no n�meros, los pasamos a numericos
+#ojo, son caracteres, no números, los pasamos a numericos
 
 Acyt$coordinatePrecision<-as.numeric(Acyt$coordinatePrecision)
 Acyt$coordinateUncertaintyInMeters<-as.numeric(Acyt$coordinateUncertaintyInMeters)
 
 
-#Donde estan los datos vac�os?
+#Donde estan los datos vacíos?
 
 unique(is.na(Acyt$coordinatePrecision))# todos los datos tienen precision en la coordenada
 unique(is.na(Acyt$coordinateUncertaintyInMeters))
@@ -196,9 +196,9 @@ points(Acyt$decimalLongitude,Acyt$decimalLatitude, pch=20, col="red")
 
 points(Acyt[is.na(Acyt$coordinateUncertaintyInMeters), ]$decimalLongitude, Acyt[is.na(Acyt$coordinateUncertaintyInMeters), ]$decimalLatitude, col="green", cex=0.75)
 
-# decidimos si quitamos los datos vacios o no en funci�n de la cantidad de informaci�n que perdemos (en este caso los quitamos)
+# decidimos si quitamos los datos vacios o no en función de la cantidad de información que perdemos (en este caso los quitamos)
 
-# eliminamos los datos que no tengan precisi�n en la coordenada
+# eliminamos los datos que no tengan precisión en la coordenada
 
 length(Acyt$coordinatePrecision[is.na(Acyt$coordinatePrecision)])
 length(Acyt$coordinateUncertaintyInMeters[is.na(Acyt$coordinateUncertaintyInMeters)])
@@ -206,19 +206,19 @@ length(Acyt$coordinateUncertaintyInMeters[is.na(Acyt$coordinateUncertaintyInMete
 Acyt<-Acyt[!(is.na(Acyt$coordinatePrecision)), ]
 Acyt<-Acyt[!(is.na(Acyt$coordinateUncertaintyInMeters)), ]
 
-# antes de eliminar los datos en funci�n de la precisi�n comprobamos si vamos a eliminar demasiados datos
+# antes de eliminar los datos en función de la precisión comprobamos si vamos a eliminar demasiados datos
 
 histogram(Acyt$coordinatePrecision)
 histogram(Acyt$coordinateUncertaintyInMeters)
 
-length(Acyt$coordinatePrecision[Acyt$coordinatePrecision<="707"])# seg�n esto existen 7217 puntos con una precisi�n de pixel mejor de 1 km2
+length(Acyt$coordinatePrecision[Acyt$coordinatePrecision<="707"])# según esto existen 7217 puntos con una precisión de pixel mejor de 1 km2
 length(Acyt$coordinateUncertaintyInMeters[Acyt$coordinateUncertaintyInMeters<="1000"])
 
 length(Acyt$coordinatePrecision[Acyt$coordinatePrecision<="7071"])
 length(Acyt$coordinateUncertaintyInMeters[Acyt$coordinateUncertaintyInMeters<="10000"])# no se como la misma coordenada tiene precisones diferentes en grados y metros
-#somos conservadores y hacemos caso de la incertidumbre m�s peque�a, en este caso no eliminamos datos
+#somos conservadores y hacemos caso de la incertidumbre más pequeña, en este caso no eliminamos datos
 
-# de eleminarlos se aplicaria la siguiente f�rmula:
+# de eleminarlos se aplicaria la siguiente fórmula:
 
 Acyt<-Acyt[Acyt$coordinatePrecision <= 707, ] 
 
@@ -231,41 +231,41 @@ unique(Acyt$coordinateprecision)
 plot(vars_def[[1]], col="gray80")
 points(Acyt$decimalLongitude,Acyt$decimalLatitude, pch=20, col="red")
 
-#AUTOCORRELACI�N: SEPARACIÓN DE LAS PRESENCIAS POR UNA DISTANCIA M�NIMA
+#AUTOCORRELACIÓN: SEPARACIÃ“N DE LAS PRESENCIAS POR UNA DISTANCIA MíNIMA
 #-----------------------------------------------------
 
-#Este tratamiento se hace para reducir la autocorrelaci�n espacial de la muestra. De esta forma se reducen sesgos de muestreo, y se evita inflar los valores de evaluación.
+#Este tratamiento se hace para reducir la autocorrelación espacial de la muestra. De esta forma se reducen sesgos de muestreo, y se evita inflar los valores de evaluaciÃ³n.
 
-#veamos la resolución de las variables
+#veamos la resoluciÃ³n de las variables
 xres(vars_def)
 yres(vars_def)
 res.grados<-xres(vars_def)
-#n�mero de celdas vac�???as que vamos a dejar entre un punto y el siguiente
+#número de celdas vacÃ???as que vamos a dejar entre un punto y el siguiente
 celdas.vacias<-1
-#distancia m�nima entre puntos consecutivos
+#distancia mínima entre puntos consecutivos
 distancia.minima<-res.grados*celdas.vacias
-#A �cuanto es eso en km?
+#A ¿cuanto es eso en km?
 distancia.minima*111.19
 
-#EMPEZAMOS UN PLOT PARA VER EL EFECTO DE LA FUNCI�nN 
+#EMPEZAMOS UN PLOT PARA VER EL EFECTO DE LA FUNCIónN 
 plot(vars_def[[1]], col="gray80", ext= c(-10, 6, 35, 45))
 points(Acyt$decimalLongitude,Acyt$decimalLatitude, pch=20, cex=0.75)
 
 #APLICAMOS FUNCION PARA REDUCIR LA DISTANCIA ENTRE PUNTOS
-#veamos el código fuente de la función
+#veamos el cÃ³digo fuente de la funciÃ³n
 
 ReduceSpatialClustering #las columnas de coordenadas deben llamarse "latitude" y "longitude"
 
 Acyt$latitude <- Acyt$decimalLatitude
 Acyt$longitude <- Acyt$decimalLongitude
 
-#apliquemos la función a los datos
+#apliquemos la funciÃ³n a los datos
 Acyt_cor <- ReduceSpatialClustering(data=Acyt, minimum.distance=distancia.minima)
 
 #TERMINAMOS EL PLOT
-points(points(Acyt_cor$longitude,Acyt_cor$latitude, col="red", cex=0.75)) #en este caso comprobamos que no se pierde deamsia densidad (de hecho, no se pierde nada pq deben estar ya m�s alejados de 1km).
+points(points(Acyt_cor$longitude,Acyt_cor$latitude, col="red", cex=0.75)) #en este caso comprobamos que no se pierde deamsia densidad (de hecho, no se pierde nada pq deben estar ya más alejados de 1km).
 
-#decidimos aplicar la funci�n a la matriz pq no se pierden demasiados datos
+#decidimos aplicar la función a la matriz pq no se pierden demasiados datos
 
 Acyt <- Acyt_cor
 
@@ -274,7 +274,7 @@ Acyt <- Acyt_cor
 #---------------------------------------------------------------------------------------------
 #buscamos registros duplicados en las coordenadas
 duplicados<-duplicated(Acyt[ , c("latitude", "longitude")])
-#¿cuantos duplicados hay?
+#Â¿cuantos duplicados hay?
 length(duplicados[duplicados==TRUE])
 length(duplicados[!duplicados==TRUE])## solo hay 2323 puntos no duplicados!!! lo podemos comprobar con
 sort(Acyt$longitude)
@@ -289,7 +289,7 @@ points(Acyt_dupl$longitude,Acyt_dupl$latitude, cex=0.7, col="green")#confirmamos
 Acyt <- Acyt_dupl
 rm(Acyt_dupl)
 
-#comprobamos que no han quedado duplicados (solo para cultivar vuestra fé)
+#comprobamos que no han quedado duplicados (solo para cultivar vuestra fÃ©)
 duplicados<-duplicated(Acyt[ , c("latitude", "longitude")])
 length(duplicados[duplicados==TRUE])
 
@@ -324,9 +324,9 @@ write.table(Anthyllis_cytisoides.maxent, file="C:/Taller 1/maxent/Anthyllis cyti
 ##### TERMINAMOS LA TABLA
 ##-------------------------------------------------------------------------------------------------
 
-#TERMINAMOS DE PREPARAR LA TABLA DE PRESENCIA, ELIMINANDO ALGUNAS COLUMNAS QUE NO SIRVEN, Y AÑADIMOS LA COLUMNA DE PRESENCIA CON UNOS.
+#TERMINAMOS DE PREPARAR LA TABLA DE PRESENCIA, ELIMINANDO ALGUNAS COLUMNAS QUE NO SIRVEN, Y AÃ‘ADIMOS LA COLUMNA DE PRESENCIA CON UNOS.
 #ESTO LO HACEMOS PARA QUE LA ESTRUCTURA DE LA TABLA DE PRESENCIA ENCAJE CON LA ESTRUCTURA DE LAS TABLAS DE BACKGROND, PSEUDOAUSENCIAS Y AUSENCIAS
-#cambiamos latitude y longitude por y y x (más corto)
+#cambiamos latitude y longitude por y y x (mÃ¡s corto)
 
 Acyt$presence<-1
 
@@ -337,7 +337,7 @@ head(Acyt_def)
 Acyt <- Acyt_def
 rm(Acyt_def)
 
-#guardamos también la tabla original de presencia
+#guardamos tambiÃ©n la tabla original de presencia
 write.table(Acyt, file="C:/Taller 1/Anthyllis cytisoides_only.csv", sep=";", row.names=FALSE, quote=FALSE)
 
 #recuperamos algo de memoria RAM borrando objetos que no vamos a usar mas
@@ -346,7 +346,7 @@ gc()
 
 
 
-############################# PREPARACI�N BACKGROUN Y PSEUDOAUSENCIA ###################################
+############################# PREPARACIÓN BACKGROUN Y PSEUDOAUSENCIA ###################################
 ########################################################################################################
 
 
@@ -354,12 +354,12 @@ help(randomPoints)
 
 ########### GENERAMOS LOS PUNTOS DE BACKGROUND
 
-# para determinar el n�mero de puntos de background debemos saber primero el n�mero de celdas de nuestro raster
+# para determinar el número de puntos de background debemos saber primero el número de celdas de nuestro raster
 
 ncell(vars_def[["bio8_eu"]]) #en este caso hay 216000
 
 #se suele considerar que el background es suficiente con el 10 o 20% del total de puntos.
-# unos 20000 en este caso. Aunque en bibliograf�a se considera suficiente con 10000
+# unos 20000 en este caso. Aunque en bibliografía se considera suficiente con 10000
 background <- randomPoints(mask=vars_def, n=20000)
 
 str(background)
@@ -373,10 +373,10 @@ background.vars<-data.frame(extract(vars_def, background))
 #unimos las coordenadas con los valores de las variables
 background<-cbind(background, background.vars)
 
-#le añadimos la columna de presencia
+#le aÃ±adimos la columna de presencia
 background$presence<-0
 
-#le añadimos la columna de presencia
+#le aÃ±adimos la columna de presencia
 background$specie<- "Anthyllis cytisoides"
 
 background<-data.frame(background$specie, background$x, background$y, background$presence, background$bio3_eu, background$bio4_eu, background$bio8_eu, background$bio9_eu, background$bio12_eu,  background$bio15_eu)
@@ -384,7 +384,7 @@ names(background)<-c("specie","x","y", "presence", "bio3","bio4","bio8", "bio9",
 head(background)
 
 
-#unimos las presencias y el background en una �nica tabla
+#unimos las presencias y el background en una única tabla
 
 Acyt_def <- read.csv("C:/Taller 1/Anthyllis cytisoides_only.csv", sep=";", dec=".")
 
@@ -392,7 +392,7 @@ Acyt_presencia.background<-rbind(Acyt_def, background)
 
 #guardamos la tabla
 
-write.table(Acyt_presencia.background, "C:/aller 1/Anthyllis cytisoides_pback.csv", row.names=FALSE, col.names=TRUE, quote=FALSE, sep=";", dec=".")
+write.table(Acyt_presencia.background, "C:/Taller 1/Anthyllis cytisoides_pback.csv", row.names=FALSE, col.names=TRUE, quote=FALSE, sep=";", dec=".")
 
 #borramos objetos que no necesitamos
 rm(background)
@@ -412,7 +412,7 @@ dev.off()
 
 
 #usamos presencia.completa en lugar de presencia porque presencia.completa tiene todas las presencias posibles.
-#sin embargo, queremos tantas pseudo-ausencias como presencias hay en presencia, de ah� (n=nrow(presencia))
+#sin embargo, queremos tantas pseudo-ausencias como presencias hay en presencia, de ahí (n=nrow(presencia))
 
 Acyt_complet<-read.csv("C:/Taller 1/datos GBIF/Anthyllis cytisoides p.csv",sep=";", dec=".")## rescatamos y  preparamos la tabla de Acyt_complet
 
@@ -432,7 +432,7 @@ unique(is.na(Acyt_complet$decimalLongitude))
 ##-------------------------------------------------------------------------------------------------------------------
 
 pseudoausencia <- randomPoints(mask=vars_def, n=nrow(Acyt_def), p=Acyt_complet[ , c("decimalLatitude","decimalLongitude")], excludep=TRUE)
-str(pseudoausencia)## fijese en que queremos tantas pseudo-ausencias como presencias hay en presencia, de ah� (n=nrow(presencia))
+str(pseudoausencia)## fijese en que queremos tantas pseudo-ausencias como presencias hay en presencia, de ahí (n=nrow(presencia))
 
 #no es un data.frame, lo transformamos en data.frame
 pseudoausencia<-data.frame(pseudoausencia)
@@ -443,10 +443,10 @@ pseudoausencia.variables<-data.frame(extract(vars_def, pseudoausencia))
 #unimos las coordenadas con los valores de las variables
 pseudoausencia<-cbind(pseudoausencia, pseudoausencia.variables)
 
-#le a�adimos la columna de presencia
+#le añadimos la columna de presencia
 pseudoausencia$presence<-0
 
-#le a�adimos la columna de especie
+#le añadimos la columna de especie
 pseudoausencia$specie<- "Anthyllis cytisoides"
 
 
@@ -454,7 +454,7 @@ pseudoausencia<-data.frame(pseudoausencia$specie, pseudoausencia$x, pseudoausenc
 names(pseudoausencia)<-c("specie","x","y", "presence", "bio3","bio4","bio8", "bio9", "bio12", "bio15")
 head(pseudoausencia)
 
-#unimos las presencias y el background en una única tabla
+#unimos las presencias y el background en una Ãºnica tabla
 Acyt_presencia.pseudoausencia<-rbind(Acyt_def, pseudoausencia)
 
 #guardamos la tabla
